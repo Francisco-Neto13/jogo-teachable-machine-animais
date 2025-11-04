@@ -40,7 +40,7 @@ O jogo opera em um ciclo contínuo de rodadas, focado em duas etapas principais 
     * O palpite do usuário é verificado contra a classe real do animal.
     * **Acerto:** A pontuação (`Pontos`) aumenta em +1, e a sequência (`Streak`) é incrementada.
     * **Erro:** A sequência (`Streak`) é resetada para 0.
-    * Após 2.5 segundos de feedback, a rodada é reiniciada.
+    * Após 1.5 segundos de feedback, a rodada é reiniciada.
 
 ---
 
