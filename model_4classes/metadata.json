@@ -1,0 +1,17 @@
+{
+  "tfjsVersion":"1.7.4",
+  "tmVersion":"2.4.10",
+  "packageVersion":"0.8.4-alpha2",
+  "packageName":"@teachablemachine/image",
+  "timeStamp":"2025-11-04T10:44:56.986Z",
+  "userMetadata":{},
+  "modelName":"tm-my-image-model",
+  "numClasses": 4, 
+  "labels":[
+    "gato",
+    "cachorro",
+    "vaca",
+    "cavalo"
+  ],
+  "imageSize":224
+}

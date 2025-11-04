@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Gambling de Animais</title>
+        <style>
+
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 20px;
+                position: relative;
+                min-height: 100vh;
+                
+                background-image: url('./imagens/fundo.png');
+                background-size: cover;                      
+                background-attachment: fixed;                
+                background-repeat: no-repeat;                
+                background-color: #f8f9fa;                   
+            }
+
+            #scoreboard-container {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                text-align: right;
+                font-size: 1.1em;
+                font-weight: bold;
+                color: #343a40;
+            }
+            #score-display {
+                color: #28a745;
+            }
+            #streak-display {
+                color: #ffc107;
+            }
+
+            h1 {
+                color: #ffffff; 
+                margin-bottom: 30px;
+            }
+            
+            #image-container {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 30px;
+            }
+
+            #current-image {
+                width: 250px; 
+                height: 250px; 
+                object-fit: cover; 
+                border: 5px solid #6c757d; 
+                border-radius: 8px; 
+            }
+            
+            .guess-buttons {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap; 
+                max-width: 800px;
+                margin: 0 auto 30px auto;
+            }
+            .guess-buttons button {
+                padding: 15px 25px;
+                font-size: 1.2em;
+                cursor: pointer;
+                margin: 5px; 
+                border: none;
+                border-radius: 8px;
+                transition: background-color 0.2s, transform 0.1s;
+                flex-grow: 1; 
+                min-width: 120px;
+                
+                background-color: #007bff;
+                color: white;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            }
+            .guess-buttons button:hover {
+                background-color: #0056b3; 
+                transform: translateY(-2px);
+            }
+            .guess-buttons button:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+                box-shadow: none;
+                transform: none;
+            }
+            
+            #result-display {
+                margin-top: 20px;
+                font-size: 1.6em;
+                min-height: 40px; 
+                font-weight: bold;
+                color: #343a40;
+            }
+            #label-container {
+                margin-top: 10px;
+                font-size: 0.9em;
+                color: #6c757d;
+            }
+        </style>
+</head>
+<body>
+
+    <div id="scoreboard-container">
+        <div id="score-display">Pontos: 0</div>
+        <div id="streak-display">Streak: 0</div>
+    </div>
+    
+    <h1>Qual é o Animal?</h1>
+    
+    <div id="image-container">
+        <img id="current-image" src="" alt="Adivinhe o animal">
+    </div>
+    
+    <div class="guess-buttons">
+        <button id="btn-gato" onclick="handleGuess('gato')">Gato</button>
+        <button id="btn-cachorro" onclick="handleGuess('cachorro')">Cachorro</button>
+        <button id="btn-vaca" onclick="handleGuess('vaca')">Vaca</button>
+        <button id="btn-cavalo" onclick="handleGuess('cavalo')">Cavalo</button>
+    </div>
+
+    <div id="result-display"></div>
+    <div id="label-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script src="./index.js"></script>
+
+</body>
+</html>
