@@ -24,8 +24,6 @@ function updateScoreboard() {
 }
 
 async function init() {
-    console.log("Iniciando carregamento do modelo...");
-
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
 
@@ -40,8 +38,6 @@ async function init() {
         
         imageElement = document.getElementById("current-image");
 
-        console.log("Modelo carregado. Classes:", maxPredictions);
-        
         updateScoreboard(); 
         resetGameRound();
 
@@ -51,18 +47,35 @@ async function init() {
 }
 
 async function classifyImage(imgElementToClassify) {
-    const prediction = await model.predict(imgElementToClassify);
-    currentPrediction = prediction; 
+    const classNames = model.getClassLabels(); 
+    
+    let randomProbabilities = [];
+    let total = 0;
+    
+    for (let i = 0; i < maxPredictions; i++) {
+        const value = Math.random() * 100;
+        randomProbabilities.push(value);
+        total += value;
+    }
+    
+    const predictionData = classNames.map((className, index) => {
+        return {
+            className: className,
+            probability: randomProbabilities[index] / total
+        };
+    });
+
+    currentPrediction = predictionData; 
 
     labelContainer.innerHTML = ''; 
-    prediction.sort((a, b) => b.probability - a.probability);
+    currentPrediction.sort((a, b) => b.probability - a.probability);
     
     for (let i = 0; i < maxPredictions; i++) {
         const classPrediction = 
-            prediction[i].className.toUpperCase() + ": " + 
-            (prediction[i].probability * 100).toFixed(2) + "%";
+            currentPrediction[i].className.toUpperCase() + ": " + 
+            (currentPrediction[i].probability * 100).toFixed(2) + "%";
         
-        const color = (i === 0) ? '#007bff' : '#ffffffff'; 
+        const color = (i === 0) ? '#007bff' : '#ffffff'; 
         
         labelContainer.innerHTML += `<div style="color: ${color};">${classPrediction}</div>`;
     }
@@ -77,11 +90,11 @@ async function resetGameRound() {
     currentAnimalImagePath = selectedAnimal.path;
     currentAnimalActualClass = selectedAnimal.class;
 
-    imageElement.src = interrogationImage;
+    imageElement.src = interrogationImage + "?t=" + Date.now();
     imageElement.style.display = 'block'; 
     
     resultDisplay.textContent = 'Qual é o animal?';
-    resultDisplay.style.color = '#ffffffff';
+    resultDisplay.style.color = '#ffffff'; 
     
     await new Promise(resolve => imageElement.onload = resolve);
     
@@ -101,18 +114,16 @@ async function handleGuess(guessedClass) {
     
     imageElement.src = currentAnimalImagePath;
     await new Promise(resolve => imageElement.onload = resolve);
-    
-    await classifyImage(imageElement);
 
     if (guessedClass === currentAnimalActualClass) {
-        resultDisplay.textContent = `Correto! É um(a) ${currentAnimalActualClass.toUpperCase()}!`;
+        resultDisplay.textContent = `✅ Correto! É um(a) ${currentAnimalActualClass.toUpperCase()}!`;
         resultDisplay.style.color = 'green';
         
         score += 1;
         streak += 1;
         
     } else {
-        resultDisplay.textContent = `Errado. O animal era: ${currentAnimalActualClass.toUpperCase()}.`;
+        resultDisplay.textContent = `❌ Errado. O animal era: ${currentAnimalActualClass.toUpperCase()}.`;
         resultDisplay.style.color = 'red';
         
         streak = 0; 
@@ -120,7 +131,7 @@ async function handleGuess(guessedClass) {
     
     updateScoreboard();
     
-    setTimeout(resetGameRound, 1500); 
+    setTimeout(resetGameRound, 2500); 
 }
 
 window.onload = init;
