@@ -1,137 +1,160 @@
-const URL = "./model_4classes/"; 
-let model, labelContainer, maxPredictions;
-let imageElement; 
-const resultDisplay = document.getElementById("result-display");
+const URL = "./model/";
+let model, webcam, maxPredictions;
 
-let score = 0;
-let streak = 0;
+const gestureToAnimalMap = {
+    "SINAL_1": { number: 1, name: "Gato" }, 
+    "SINAL_2": { number: 2, name: "Cachorro" },
+    "SINAL_3": { number: 3, name: "Vaca" },
+    "SINAL_4": { number: 4, name: "Cavalo" },
+    "SINAL_5": { number: 5, name: "Pássaro" }
+};
 
-const animalImageFiles = [
-    {path: "./imagens/cachorro.jpg", class: "cachorro"}, 
-    {path: "./imagens/gato.png", class: "gato"},      
-    {path: "./imagens/vaca.jpg", class: "vaca"},   
-    {path: "./imagens/cavalo.jpg", class: "cavalo"}
-];
-const interrogationImage = "./imagens/interrogacao.png";
+const resultDisplay = document.getElementById('result-display');
+const confirmButton = document.getElementById('confirm-button');
+const logDisplay = document.getElementById('log-display'); 
 
-let currentAnimalImagePath = null;
-let currentAnimalActualClass = null;
-let currentPrediction = null;
+let currentAIChoice = null; 
+const confidenceThreshold = 0.8; 
+const STABILITY_DELAY = 500; 
 
-function updateScoreboard() {
-    document.getElementById("score-display").textContent = `Pontos: ${score}`;
-    document.getElementById("streak-display").textContent = `Streak: ${streak}`;
-}
+let stabilityTimer = null; 
+let pendingPrediction = null; 
 
 async function init() {
-    const modelURL = URL + "model.json";
-    const metadataURL = URL + "metadata.json";
-
     try {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+        
         model = await tmImage.load(modelURL, metadataURL);
         maxPredictions = model.getTotalClasses();
         
-        labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) {
-            labelContainer.appendChild(document.createElement("div"));
-        }
+        const flip = true; 
+        webcam = new tmImage.Webcam(400, 400, flip); 
         
-        imageElement = document.getElementById("current-image");
+        await webcam.setup(); 
+        await webcam.play();
+        window.requestAnimationFrame(loop);
 
-        updateScoreboard(); 
-        resetGameRound();
+        document.getElementById("webcam-container").appendChild(webcam.canvas);
+        
+        resultDisplay.textContent = 'IA pronta. Mostre um sinal de 1 a 5.';
+        confirmButton.disabled = true;
 
     } catch (error) {
-        console.error("ERRO FATAL: Falha ao carregar o modelo. Verifique a pasta '/model_4classes/' e o 'numClasses' no metadata.json.", error);
+        resultDisplay.textContent = 'ERRO: Verifique o console (F12) para detalhes. (Webcam/Modelo).';
+        resultDisplay.style.color = 'red';
     }
 }
 
-async function classifyImage(imgElementToClassify) {
-    const classNames = model.getClassLabels(); 
-    
-    let randomProbabilities = [];
-    let total = 0;
-    
-    for (let i = 0; i < maxPredictions; i++) {
-        const value = Math.random() * 100;
-        randomProbabilities.push(value);
-        total += value;
+function loop() {
+    if (webcam && model) {
+        webcam.update(); 
+        classifyImage();
     }
+    window.requestAnimationFrame(loop);
+}
+
+function setStableChoice(animalInfo) {
+    if (currentAIChoice && currentAIChoice.name === animalInfo.name) return;
+
+    currentAIChoice = animalInfo;
+    confirmButton.disabled = false;
     
-    const predictionData = classNames.map((className, index) => {
-        return {
-            className: className,
-            probability: randomProbabilities[index] / total
-        };
+    resultDisplay.textContent = `Palpite fixado: SINAL ${animalInfo.number} (${animalInfo.name}). CLIQUE EM CONFIRMAR!`;
+    resultDisplay.style.color = 'lime'; 
+
+    if (stabilityTimer) {
+        clearTimeout(stabilityTimer);
+        stabilityTimer = null;
+    }
+}
+
+async function classifyImage() {
+    if (!webcam || !model) { return; }
+    
+    const prediction = await model.predict(webcam.canvas);
+    
+    let bestPrediction = { probability: 0, className: "" };
+    prediction.forEach(p => {
+        if (p.probability > bestPrediction.probability) {
+            bestPrediction = p;
+        }
     });
 
-    currentPrediction = predictionData; 
-
-    labelContainer.innerHTML = ''; 
-    currentPrediction.sort((a, b) => b.probability - a.probability);
+    const predictedClassKey = bestPrediction.className;
+    const probability = bestPrediction.probability;
     
-    for (let i = 0; i < maxPredictions; i++) {
-        const classPrediction = 
-            currentPrediction[i].className.toUpperCase() + ": " + 
-            (currentPrediction[i].probability * 100).toFixed(2) + "%";
+    if (predictedClassKey === "NENHUM" || probability < confidenceThreshold) {
         
-        const color = (i === 0) ? '#007bff' : '#ffffff'; 
+        if (stabilityTimer) {
+            clearTimeout(stabilityTimer);
+            stabilityTimer = null;
+        }
         
-        labelContainer.innerHTML += `<div style="color: ${color};">${classPrediction}</div>`;
-    }
-}
-
-async function resetGameRound() {
-    document.querySelectorAll('.guess-buttons button').forEach(btn => btn.disabled = true);
-
-    const randomIndex = Math.floor(Math.random() * animalImageFiles.length);
-    const selectedAnimal = animalImageFiles[randomIndex];
-    
-    currentAnimalImagePath = selectedAnimal.path;
-    currentAnimalActualClass = selectedAnimal.class;
-
-    imageElement.src = interrogationImage + "?t=" + Date.now();
-    imageElement.style.display = 'block'; 
-    
-    resultDisplay.textContent = 'Qual é o animal?';
-    resultDisplay.style.color = '#ffffff'; 
-    
-    await new Promise(resolve => imageElement.onload = resolve);
-    
-    await classifyImage(imageElement);
-
-    document.querySelectorAll('.guess-buttons button').forEach(btn => btn.disabled = false);
-}
-
-
-async function handleGuess(guessedClass) {
-    if (!currentPrediction) {
-        resultDisplay.textContent = "Aguarde a primeira previsão...";
+        if (currentAIChoice) {
+            currentAIChoice = null;
+            confirmButton.disabled = true;
+            resultDisplay.textContent = 'Sinal perdido. Mostre um sinal claro de 1 a 5.';
+            resultDisplay.style.color = 'red';
+        } else {
+            resultDisplay.textContent = 'A IA está vendo: NENHUM (ou confiança baixa).';
+            confirmButton.disabled = true;
+            resultDisplay.style.color = 'gray';
+        }
+        
+        pendingPrediction = null;
         return;
     }
 
-    document.querySelectorAll('.guess-buttons button').forEach(btn => btn.disabled = true);
-    
-    imageElement.src = currentAnimalImagePath;
-    await new Promise(resolve => imageElement.onload = resolve);
-
-    if (guessedClass === currentAnimalActualClass) {
-        resultDisplay.textContent = `✅ Correto! É um(a) ${currentAnimalActualClass.toUpperCase()}!`;
-        resultDisplay.style.color = 'green';
+    if (gestureToAnimalMap[predictedClassKey]) {
+        const animalInfo = gestureToAnimalMap[predictedClassKey];
         
-        score += 1;
-        streak += 1;
+        if (pendingPrediction && pendingPrediction.name === animalInfo.name) {
+            resultDisplay.textContent = `Quase lá: SINAL ${animalInfo.number} (${animalInfo.name}). Mantenha fixo!`;
+            resultDisplay.style.color = 'yellow';
+            
+        } 
         
-    } else {
-        resultDisplay.textContent = `❌ Errado. O animal era: ${currentAnimalActualClass.toUpperCase()}.`;
-        resultDisplay.style.color = 'red';
-        
-        streak = 0; 
+        else if (!pendingPrediction || pendingPrediction.name !== animalInfo.name) {
+            
+            if (stabilityTimer) {
+                clearTimeout(stabilityTimer);
+            }
+            
+            pendingPrediction = animalInfo;
+            
+            stabilityTimer = setTimeout(() => {
+                setStableChoice(animalInfo);
+            }, STABILITY_DELAY);
+            
+            resultDisplay.textContent = `SINAL ${animalInfo.number} detectado! Mantenha fixo por um momento...`;
+            resultDisplay.style.color = 'yellow';
+        }
     }
-    
-    updateScoreboard();
-    
-    setTimeout(resetGameRound, 2500); 
 }
+
+function handleConfirmation() {
+    if (currentAIChoice) {
+        const message = `✅ PALPITE CONFIRMADO: Sinal ${currentAIChoice.number} (${currentAIChoice.name}).`;
+        
+        const logEntry = document.createElement('p');
+        logEntry.textContent = message;
+        logEntry.style.color = '#00bff'; 
+        logEntry.style.margin = '5px 0';
+        logDisplay.prepend(logEntry);
+
+        currentAIChoice = null; 
+        confirmButton.disabled = true;
+        
+        resultDisplay.textContent = 'Pronto para o próximo palpite. Mostre outro sinal.';
+        resultDisplay.style.color = 'blue';
+
+    } else {
+        resultDisplay.textContent = 'Não há um palpite fixado da IA para confirmar.';
+        resultDisplay.style.color = 'red';
+    }
+}
+
+confirmButton.addEventListener('click', handleConfirmation);
 
 window.onload = init;
