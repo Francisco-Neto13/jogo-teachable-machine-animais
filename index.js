@@ -1,12 +1,12 @@
 const URL = "./model/";
 let model, webcam, maxPredictions;
 
-const gestureToAnimalMap = {
-    "SINAL_1": { number: 1, name: "Gato" }, 
-    "SINAL_2": { number: 2, name: "Cachorro" },
-    "SINAL_3": { number: 3, name: "Vaca" },
-    "SINAL_4": { number: 4, name: "Cavalo" },
-    "SINAL_5": { number: 5, name: "Pássaro" }
+const gestureToNumberMap = {
+    "SINAL_1": { number: 1, name: "Um" }, 
+    "SINAL_2": { number: 2, name: "Dois" },
+    "SINAL_3": { number: 3, name: "Três" },
+    "SINAL_4": { number: 4, name: "Quatro" },
+    "SINAL_5": { number: 5, name: "Cinco" }
 };
 
 const resultDisplay = document.getElementById('result-display');
@@ -54,13 +54,13 @@ function loop() {
     window.requestAnimationFrame(loop);
 }
 
-function setStableChoice(animalInfo) {
-    if (currentAIChoice && currentAIChoice.name === animalInfo.name) return;
+function setStableChoice(numberInfo) {
+    if (currentAIChoice && currentAIChoice.name === numberInfo.name) return;
 
-    currentAIChoice = animalInfo;
+    currentAIChoice = numberInfo;
     confirmButton.disabled = false;
     
-    resultDisplay.textContent = `Palpite fixado: SINAL ${animalInfo.number} (${animalInfo.name}). CLIQUE EM CONFIRMAR!`;
+    resultDisplay.textContent = `Palpite fixado: SINAL ${numberInfo.number} (${numberInfo.name}). CLIQUE EM CONFIRMAR!`;
     resultDisplay.style.color = 'lime'; 
 
     if (stabilityTimer) {
@@ -106,28 +106,28 @@ async function classifyImage() {
         return;
     }
 
-    if (gestureToAnimalMap[predictedClassKey]) {
-        const animalInfo = gestureToAnimalMap[predictedClassKey];
+    if (gestureToNumberMap[predictedClassKey]) {
+        const numberInfo = gestureToNumberMap[predictedClassKey];
         
-        if (pendingPrediction && pendingPrediction.name === animalInfo.name) {
-            resultDisplay.textContent = `Quase lá: SINAL ${animalInfo.number} (${animalInfo.name}). Mantenha fixo!`;
+        if (pendingPrediction && pendingPrediction.name === numberInfo.name) {
+            resultDisplay.textContent = `Quase lá: SINAL ${numberInfo.number} (${numberInfo.name}). Mantenha fixo!`;
             resultDisplay.style.color = 'yellow';
             
         } 
         
-        else if (!pendingPrediction || pendingPrediction.name !== animalInfo.name) {
+        else if (!pendingPrediction || pendingPrediction.name !== numberInfo.name) {
             
             if (stabilityTimer) {
                 clearTimeout(stabilityTimer);
             }
             
-            pendingPrediction = animalInfo;
+            pendingPrediction = numberInfo;
             
             stabilityTimer = setTimeout(() => {
-                setStableChoice(animalInfo);
+                setStableChoice(numberInfo);
             }, STABILITY_DELAY);
             
-            resultDisplay.textContent = `SINAL ${animalInfo.number} detectado! Mantenha fixo por um momento...`;
+            resultDisplay.textContent = `SINAL ${numberInfo.number} detectado! Mantenha fixo por um momento...`;
             resultDisplay.style.color = 'yellow';
         }
     }
