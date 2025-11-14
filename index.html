@@ -98,41 +98,46 @@
             font-weight: bold;
         }
         
-        #dual-container {
+        #main-content-wrapper { 
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 50px;
+            margin-bottom: 50px;
         }
-
-        #webcam-side, #guide-side {
+        
+        #test-area-wrapper {
             background: var(--fundo-claro);
             border: 1px solid var(--borda);
             border-radius: 12px;
             padding: 25px;
             width: 520px;
-            transition: box-shadow 0.3s ease, transform 0.2s ease;
-        }
-
-        #webcam-side:hover, #guide-side:hover {
-            box-shadow: 0 0 15px rgba(94,161,214,0.25);
-            transform: translateY(-3px);
-        }
-
-        #webcam-side {
-            background: var(--fundo-claro);
-            border: 1px solid var(--borda);
-            border-radius: 12px;
-            padding: 25px;
-            width: 520px;
-
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-
             transition: box-shadow 0.3s ease, transform 0.2s ease;
         }
+
+        #test-area-wrapper:hover {
+            box-shadow: 0 0 15px rgba(94,161,214,0.25);
+            transform: translateY(-3px);
+        }
+
+        #guide-side {
+            background: var(--fundo-claro);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            padding: 25px;
+            width: 520px;
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        #guide-side:hover {
+            box-shadow: 0 0 15px rgba(94,161,214,0.25);
+            transform: translateY(-3px);
+        }
+
 
         #webcam-container {
             width: 400px;
@@ -149,6 +154,9 @@
 
             transition: box-shadow 0.3s ease, transform 0.2s ease;
             margin-bottom: 20px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
         }
 
         #webcam-container:hover {
@@ -171,9 +179,9 @@
         }
 
         #confirm-button {
-            margin-top: 25px;
-            padding: 14px 32px;
-            font-size: 1.1em;
+            margin-top: 12px;
+            padding: 12px 28px;
+            font-size: 1.05em;
             border: none;
             border-radius: 8px;
             background: var(--cor-secundaria);
@@ -192,6 +200,18 @@
             background: #444;
             color: #aaa;
             cursor: not-allowed;
+        }
+
+        #start-game {
+            margin-top:12px;
+            padding:12px 28px;
+            font-size:1.05em;
+            border:none;
+            border-radius:8px;
+            background:#5ea1d6;
+            color:#fff;
+            font-weight:600;
+            cursor:pointer;
         }
 
         #gesture-guide-container {
@@ -244,7 +264,7 @@
             font-size: 0.9em;
         }
 
-        #log-display-container {
+        #log-display-container { 
             margin-top: 25px;
             text-align: left;
         }
@@ -273,6 +293,52 @@
             background: var(--cor-principal);
             border-radius: 3px;
         }
+
+        #game-content-flex { 
+            display:flex; 
+            justify-content:center; 
+            gap:40px; 
+            margin-top:25px;
+            flex-direction: row-reverse; 
+        }
+
+        #game-webcam-slot {
+            width:400px;
+            height:400px;
+            border-radius: 12px;
+            background: #0c0c0c;
+            border: 3px solid var(--cor-principal);
+            overflow: hidden; 
+            
+            box-shadow:
+                0 0 25px rgba(94, 161, 214, 0.25),
+                inset 0 0 8px rgba(94, 161, 214, 0.1),
+                0 2px 6px rgba(0, 0, 0, 0.6);
+
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+            
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        #game-webcam-slot:hover {
+            box-shadow:
+                0 0 35px rgba(94, 161, 214, 0.35),
+                inset 0 0 10px rgba(94, 161, 214, 0.2),
+                0 3px 8px rgba(0, 0, 0, 0.7);
+            transform: scale(1.01);
+        }
+
+        #animal-list-container {
+            width:250px;
+            background:#181818;
+            padding:15px;
+            border-radius:10px;
+            border:1px solid var(--borda);
+            text-align:left;
+        }
+
     </style>
 </head>
 <body>
@@ -286,44 +352,56 @@
         </div>
         <ul>
             <li>Fique em um <strong>ambiente bem iluminado</strong> para melhor precisão da IA.</li>
-            <li>Utilize a mão <strong>direita</strong> para realizer os sinais.</li>
+            <li>Utilize a mão <strong>direita</strong> para realizar os sinais.</li>
             <li>Garanta que o <strong>sinal da mão esteja totalmente visível</strong> dentro da área da webcam.</li>
-            <li>O palpite da IA será <strong>fixado em verde</strong> após manter o gesto estável por alguns segundos. Mas você pode confirmar quando estiver em <strong>amarelo</strong> "Quase lá"</li>
+            <li>O palpite da IA será <strong>fixado em verde</strong> após manter o gesto estável por alguns segundos. Mas você pode confirmar quando estiver em <strong>amarelo</strong> "Quase lá".</li>
             <li>Desça a página para visualizar o <strong>Log de Confirmações</strong>.</li>
         </ul>
     </div>
 
-    <div id="dual-container">
-        <div id="webcam-side">
-            <div id="webcam-container"></div>
+    <div id="main-content-wrapper">
+        
+        <div id="test-area-wrapper">
+            <div id="webcam-container">
+                <span style="color:#666;">A webcam aparecerá aqui...</span>
+            </div>
+
             <div id="result-display">Aguardando a conexão com a IA...</div>
+
             <div id="label-container" style="display:none;"></div>
+
             <button id="confirm-button" disabled>Confirmar Palpite</button>
+            <button id="start-game">Iniciar Jogo</button>
         </div>
 
         <div id="guide-side">
             <h2>Guia de Sinais Válidos</h2>
+
             <div id="gesture-guide-container">
                 <div class="gesture-item">
                     <span class="number">1</span>
                     <img src="./imagens/geral/um.png" alt="Um">
                     <span class="name">Um</span>
                 </div>
+
                 <div class="gesture-item">
                     <span class="number">2</span>
                     <img src="./imagens/geral/dois.png" alt="Dois">
                     <span class="name">Dois</span>
                 </div>
+
                 <div class="gesture-item">
                     <span class="number">3</span>
                     <img src="./imagens/geral/tres.png" alt="Tres">
                     <span class="name">Três</span>
                 </div>
+
                 <div class="gesture-item">
                     <span class="number">4</span>
                     <img src="./imagens/geral/quatro.png" alt="Quatro">
                     <span class="name">Quatro</span>
                 </div>
+
                 <div class="gesture-item">
                     <span class="number">5</span>
                     <img src="./imagens/geral/cinco.png" alt="Cinco">
@@ -336,6 +414,33 @@
                 <div id="log-display"></div>
             </div>
         </div>
+    </div>
+
+    <div id="game-area" style="
+        display:none;
+        margin-top:50px;
+        padding:20px;
+        border:1px solid var(--borda);
+        border-radius:12px;
+        background:var(--fundo-claro);
+        max-width:900px;
+        margin-left:auto;
+        margin-right:auto;
+    ">
+        <h2 style="color:var(--cor-principal);">Jogo: Descubra o Animal</h2>
+
+        <div id="game-content-flex">
+            
+            <div id="animal-list-container">
+                <h3 style="color:var(--cor-secundaria); text-align:center;">Animais</h3>
+            </div>
+
+            <div id="game-webcam-slot">
+                <span style="color:#666;">A webcam virá para cá quando o jogo iniciar...</span>
+            </div>
+
+        </div>
+        
     </div>
 
     <script src="index.js"></script>
