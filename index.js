@@ -47,16 +47,28 @@ export let gameArea;
 export let gameWebcamSlot;
 export let animalListContainer; 
 
+export let resultDisplayGame;
+export let confirmButtonGame;
+export let gameLogDisplay;
+
 document.addEventListener("DOMContentLoaded", () => {
     resultDisplay = document.getElementById('result-display');
     confirmButton = document.getElementById('confirm-button');
     logDisplay = document.getElementById('log-display'); 
-    testAreaWrapper = document.getElementById('test-area-wrapper');
+    testAreaWrapper = document.getElementById('main-content-wrapper');
     gameArea = document.getElementById('game-area');
     gameWebcamSlot = document.getElementById('game-webcam-slot');
     animalListContainer = document.getElementById('animal-list-container'); 
+    
+    resultDisplayGame = document.getElementById('result-display-game');
+    confirmButtonGame = document.getElementById('confirm-button-game');
+    gameLogDisplay = document.getElementById('game-log-display');
+
 
     confirmButton.addEventListener('click', handleConfirmation);
+    
+    confirmButtonGame.addEventListener('click', handleConfirmation);
+    
     document.getElementById('start-game').addEventListener('click', startGame);
 
     init();

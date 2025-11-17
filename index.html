@@ -106,12 +106,20 @@
             margin-bottom: 50px;
         }
         
-        #test-area-wrapper {
+        #game-content-flex { 
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .content-box { 
             background: var(--fundo-claro);
             border: 1px solid var(--borda);
             border-radius: 12px;
             padding: 25px;
-            width: 520px;
+            width: 520px; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -119,27 +127,59 @@
             transition: box-shadow 0.3s ease, transform 0.2s ease;
         }
 
-        #test-area-wrapper:hover {
+        .content-box:hover {
             box-shadow: 0 0 15px rgba(94,161,214,0.25);
             transform: translateY(-3px);
         }
 
-        #guide-side {
+        .game-controls-box {
+            width: 520px; 
             background: var(--fundo-claro);
             border: 1px solid var(--borda);
             border-radius: 12px;
             padding: 25px;
-            width: 520px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
             transition: box-shadow 0.3s ease, transform 0.2s ease;
         }
 
-        #guide-side:hover {
+        .game-controls-box:hover {
+            box-shadow: 0 0 15px rgba(94,161,214,0.25);
+            transform: translateY(-3px);
+        }
+
+        .game-info-box {
+            width: 520px;
+            background: var(--fundo-claro);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+            text-align: center;
+        }
+
+        .game-info-box:hover {
             box-shadow: 0 0 15px rgba(94,161,214,0.25);
             transform: translateY(-3px);
         }
 
 
-        #webcam-container {
+
+        #test-area-wrapper {
+            width: 520px;
+        }
+
+        #guide-side {
+            width: 520px;
+            margin: 0 auto 50px auto; 
+        }
+        
+        #webcam-container, #game-webcam-slot {
             width: 400px;
             height: 400px;
             border-radius: 12px;
@@ -159,7 +199,7 @@
             justify-content:center;
         }
 
-        #webcam-container:hover {
+        #webcam-container:hover, #game-webcam-slot:hover {
             box-shadow:
                 0 0 35px rgba(94, 161, 214, 0.35),
                 inset 0 0 10px rgba(94, 161, 214, 0.2),
@@ -167,7 +207,7 @@
             transform: scale(1.01);
         }
 
-        #result-display {
+        #result-display, #result-display-game {
             font-size: 1.3em;
             margin-top: 20px;
             height: 50px;
@@ -178,42 +218,37 @@
             color: var(--cor-secundaria);
         }
 
-        #confirm-button {
+        #confirm-button, #confirm-button-game, #start-game {
             margin-top: 12px;
             padding: 12px 28px;
             font-size: 1.05em;
             border: none;
             border-radius: 8px;
-            background: var(--cor-secundaria);
             color: #fff;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        #confirm-button:hover:not(:disabled) {
+        #confirm-button, #confirm-button-game {
+             background: var(--cor-secundaria);
+        }
+
+        #confirm-button:hover:not(:disabled), #confirm-button-game:hover:not(:disabled) {
             background: #63c280;
             transform: scale(1.03);
         }
 
-        #confirm-button:disabled {
+        #confirm-button:disabled, #confirm-button-game:disabled {
             background: #444;
             color: #aaa;
             cursor: not-allowed;
         }
 
         #start-game {
-            margin-top:12px;
-            padding:12px 28px;
-            font-size:1.05em;
-            border:none;
-            border-radius:8px;
             background:#5ea1d6;
-            color:#fff;
-            font-weight:600;
-            cursor:pointer;
         }
-
+        
         #gesture-guide-container {
             display: flex;
             flex-wrap: wrap;
@@ -274,7 +309,7 @@
             margin-bottom: 8px;
         }
 
-        #log-display {
+        #log-display, #game-log-display {
             background: var(--fundo-escuro);
             border: 1px solid var(--borda);
             border-radius: 8px;
@@ -285,6 +320,34 @@
             color: var(--texto-suave);
         }
 
+        #game-log-display {
+            margin-top: 20px;
+            text-align: left;
+            flex-grow: 1; 
+        }
+        
+        #game-log-display h4 {
+            color: var(--cor-principal);
+            margin: 0 0 5px 0;
+        }
+
+        #animal-list-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--fundo-escuro); 
+            border-radius: 10px;
+            border: 1px solid var(--borda);
+            text-align: left;
+            flex-grow: 1;
+        }
+        
+        #animal-list-container h3 {
+             color: var(--cor-secundaria); 
+             text-align:center;
+             margin-top:0;
+        }
+
+
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -292,51 +355,6 @@
         ::-webkit-scrollbar-thumb {
             background: var(--cor-principal);
             border-radius: 3px;
-        }
-
-        #game-content-flex { 
-            display:flex; 
-            justify-content:center; 
-            gap:40px; 
-            margin-top:25px;
-            flex-direction: row-reverse; 
-        }
-
-        #game-webcam-slot {
-            width:400px;
-            height:400px;
-            border-radius: 12px;
-            background: #0c0c0c;
-            border: 3px solid var(--cor-principal);
-            overflow: hidden; 
-            
-            box-shadow:
-                0 0 25px rgba(94, 161, 214, 0.25),
-                inset 0 0 8px rgba(94, 161, 214, 0.1),
-                0 2px 6px rgba(0, 0, 0, 0.6);
-
-            transition: box-shadow 0.3s ease, transform 0.2s ease;
-            
-            display:flex;
-            align-items:center;
-            justify-content:center;
-        }
-
-        #game-webcam-slot:hover {
-            box-shadow:
-                0 0 35px rgba(94, 161, 214, 0.35),
-                inset 0 0 10px rgba(94, 161, 214, 0.2),
-                0 3px 8px rgba(0, 0, 0, 0.7);
-            transform: scale(1.01);
-        }
-
-        #animal-list-container {
-            width:250px;
-            background:#181818;
-            padding:15px;
-            border-radius:10px;
-            border:1px solid var(--borda);
-            text-align:left;
         }
 
     </style>
@@ -359,9 +377,9 @@
         </ul>
     </div>
 
-    <div id="main-content-wrapper">
+        <div id="main-content-wrapper">
         
-        <div id="test-area-wrapper">
+        <div id="test-area-wrapper" class="content-box">
             <div id="webcam-container">
                 <span style="color:#666;">A webcam aparecerá aqui...</span>
             </div>
@@ -373,72 +391,73 @@
             <button id="confirm-button" disabled>Confirmar Palpite</button>
             <button id="start-game">Iniciar Jogo</button>
         </div>
+    </div>
 
-        <div id="guide-side">
-            <h2>Guia de Sinais Válidos</h2>
+    <div id="guide-side" class="content-box" style="justify-content:space-between;">
+        <h2>Guia de Sinais Válidos</h2>
 
-            <div id="gesture-guide-container">
-                <div class="gesture-item">
-                    <span class="number">1</span>
-                    <img src="./imagens/geral/um.png" alt="Um">
-                    <span class="name">Um</span>
-                </div>
-
-                <div class="gesture-item">
-                    <span class="number">2</span>
-                    <img src="./imagens/geral/dois.png" alt="Dois">
-                    <span class="name">Dois</span>
-                </div>
-
-                <div class="gesture-item">
-                    <span class="number">3</span>
-                    <img src="./imagens/geral/tres.png" alt="Tres">
-                    <span class="name">Três</span>
-                </div>
-
-                <div class="gesture-item">
-                    <span class="number">4</span>
-                    <img src="./imagens/geral/quatro.png" alt="Quatro">
-                    <span class="name">Quatro</span>
-                </div>
-
-                <div class="gesture-item">
-                    <span class="number">5</span>
-                    <img src="./imagens/geral/cinco.png" alt="Cinco">
-                    <span class="name">Cinco</span>
-                </div>
+        <div id="gesture-guide-container">
+            <div class="gesture-item">
+                <span class="number">1</span>
+                <img src="./imagens/geral/um.png" alt="Um">
+                <span class="name">Um</span>
             </div>
 
-            <div id="log-display-container">
-                <h3>Log de Confirmações</h3>
-                <div id="log-display"></div>
+            <div class="gesture-item">
+                <span class="number">2</span>
+                <img src="./imagens/geral/dois.png" alt="Dois">
+                <span class="name">Dois</span>
             </div>
+
+            <div class="gesture-item">
+                <span class="number">3</span>
+                <img src="./imagens/geral/tres.png" alt="Tres">
+                <span class="name">Três</span>
+            </div>
+
+            <div class="gesture-item">
+                <span class="number">4</span>
+                <img src="./imagens/geral/quatro.png" alt="Quatro">
+                <span class="name">Quatro</span>
+            </div>
+
+            <div class="gesture-item">
+                <span class="number">5</span>
+                <img src="./imagens/geral/cinco.png" alt="Cinco">
+                <span class="name">Cinco</span>
+            </div>
+        </div>
+
+        <div id="log-display-container" style="width: 100%;">
+            <h3>Log de Confirmações</h3>
+            <div id="log-display"></div>
         </div>
     </div>
 
-    <div id="game-area" style="
-        display:none;
-        margin-top:50px;
-        padding:20px;
-        border:1px solid var(--borda);
-        border-radius:12px;
-        background:var(--fundo-claro);
-        max-width:900px;
-        margin-left:auto;
-        margin-right:auto;
-    ">
+        <div id="game-area" style="display:none;">
         <h2 style="color:var(--cor-principal);">Jogo: Descubra o Animal</h2>
 
         <div id="game-content-flex">
             
-            <div id="animal-list-container">
-                <h3 style="color:var(--cor-secundaria); text-align:center;">Animais</h3>
+            <div id="game-controls-box" class="game-controls-box">
+                <div id="game-webcam-slot">
+                    <span style="color:#666;">A webcam virá para cá quando o jogo iniciar...</span>
+                </div>
+                
+                <div id="result-display-game">Aguardando sinal...</div>
+                <button id="confirm-button-game" disabled>Confirmar Palpite</button>
             </div>
 
-            <div id="game-webcam-slot">
-                <span style="color:#666;">A webcam virá para cá quando o jogo iniciar...</span>
+            <div id="game-info-box" class="game-info-box">
+                <div id="animal-list-container">
+                    <h3 style="color:var(--cor-secundaria); text-align:center;">Animais da Rodada</h3>
+                    </div>
+                
+                <div id="game-log-display">
+                    <h4>📢 Log da Rodada</h4>
+                    </div>
             </div>
-
+            
         </div>
         
     </div>

@@ -1,6 +1,13 @@
-import { logDisplay } from '../index.js'; 
+import { logDisplay, gameLogDisplay, state } from '../index.js'; 
 
 export function appendToLog(message, type = 'info') {
+    const currentLogDisplay = state.gameActive ? gameLogDisplay : logDisplay;
+    
+    if (!currentLogDisplay) {
+        console.error("Elemento de log não encontrado.");
+        return;
+    }
+
     const logEntry = document.createElement('p');
     logEntry.innerHTML = message;
     
@@ -15,9 +22,9 @@ export function appendToLog(message, type = 'info') {
     logEntry.style.paddingLeft = '5px';
     logEntry.style.borderLeft = `3px solid ${logEntry.style.color}`;
     
-    logDisplay.prepend(logEntry);
+    currentLogDisplay.prepend(logEntry);
 
-    while (logDisplay.children.length > 10) {
-        logDisplay.removeChild(logDisplay.lastChild);
+    while (currentLogDisplay.children.length > 10) {
+        currentLogDisplay.removeChild(currentLogDisplay.lastChild);
     }
 }

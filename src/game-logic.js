@@ -1,16 +1,20 @@
 import { 
-    ALL_ANIMALS, confirmButton, 
-    resultDisplay, state 
+    ALL_ANIMALS, 
+    confirmButton, 
+    resultDisplay, 
+    state 
 } from '../index.js';
+
 import { renderAnimalList } from './dom-renderer.js'; 
-import { appendToLog } from './log-utility.js';
+import { appendToLog } from './log-utility.js'; 
 import { resetAIState } from './ai-classifier.js'; 
+
 
 export function startNewRound() {
     
-    state.roundLocked = false; 
-    state.aiLocked = false; 
-    confirmButton.disabled = true; 
+    state.roundLocked = false;
+    state.aiLocked = false;
+    confirmButton.disabled = true;
 
     state.currentRoundAnimals = getFiveUniqueAnimals(ALL_ANIMALS);
 
@@ -20,12 +24,14 @@ export function startNewRound() {
     renderAnimalList(animalsWithProb);
 
     state.currentAIChoice = null;
-    
-    resultDisplay.textContent = `Nova Rodada! Probabilidade do animal correto: ${state.correctAnimal.probability.toFixed(0)}%`;
+
+    resultDisplay.textContent = `Nova Rodada!`;
     resultDisplay.style.color = '#5ea1d6';
 
-    appendToLog(`Nova Rodada Iniciada.`, 'info');
+    appendToLog('', 'clear', true);
+    appendToLog(`🕹️ **Nova Rodada** iniciada. Tente o sinal correspondente ao animal correto.`, 'info', true);
 }
+
 
 export function getFiveUniqueAnimals(baseList) {
     const shuffled = [...baseList].sort(() => 0.5 - Math.random());
@@ -33,70 +39,70 @@ export function getFiveUniqueAnimals(baseList) {
 }
 
 export function defineAnswerWithProbabilities(animals) {
-    const numAnimals = animals.length;
-    let totalProb = 100;
-    let animalsWithProb = [];
-
-    for (let i = 0; i < numAnimals; i++) {
-        let weight = (i === numAnimals - 1) 
-            ? totalProb 
-            : Math.max(10, Math.floor(Math.random() * (totalProb - (numAnimals - 1 - i) * 10))); 
-        
-        animalsWithProb.push({
-            name: animals[i],
-            probability: weight
-        });
-        totalProb -= weight;
-    }
     
-    const finalSum = animalsWithProb.reduce((s, a) => s + a.probability, 0);
-    if (finalSum !== 100) {
-        animalsWithProb[numAnimals - 1].probability += (100 - finalSum);
+    const answerIndex = Math.floor(Math.random() * animals.length);
+    const answerName = animals[answerIndex];
+
+    let raw = [];
+    for (let i = 0; i < animals.length; i++) {
+        raw.push(Math.random());
     }
 
-    let r = Math.random() * 100;
-    let sum = 0;
+    const total = raw.reduce((a, b) => a + b, 0);
 
-    let answer = animalsWithProb.find(a => (sum += a.probability) > r);
+    let percentages = raw.map(v => Math.floor((v / total) * 100));
 
-    return { answer, animalsWithProb };
+    const diff = 100 - percentages.reduce((a, b) => a + b, 0);
+    percentages[0] += diff;
+
+    const animalsWithProb = animals.map((name, idx) => {
+        return {
+            name,
+            isCorrect: idx === answerIndex,
+            probability: percentages[idx]
+        };
+    });
+
+    return {
+        answer: {
+            name: answerName
+        },
+        animalsWithProb
+    };
 }
+
+
 
 export function mapNumberToAnimal(number) {
-    const index = number - 1;
-    if (!state.currentRoundAnimals[index]) return null;
-    return state.currentRoundAnimals[index];
+    const animalEntry = state.currentRoundAnimals[number - 1];
+    return animalEntry || null;
 }
+
 
 export function checkGameGuess(guessedAnimalName) {
     let message = '';
     let type = '';
 
     if (guessedAnimalName === state.correctAnimal.name) {
-        message = `ACERTOU! O animal correto era ${state.correctAnimal.name}.`;
+        message = `🎉 **ACERTOU!** O animal correto era ${state.correctAnimal.name}.`;
         type = 'success';
     } else {
-        message = `ERROU! Você escolheu ${guessedAnimalName}, mas o correto era ${state.correctAnimal.name}.`;
+        message = `❌ **ERROU!** Você escolheu **${guessedAnimalName}**, mas o correto era ${state.correctAnimal.name}.`;
         type = 'error';
     }
 
-    appendToLog(message, type);
+    appendToLog(message, type, true);
 
     resultDisplay.textContent = "Atualizando lista... Nova rodada em instantes.";
     resultDisplay.style.color = '#ffc107';
+
+    state.roundLocked = true;
+    resetAIState();
 
     setTimeout(startNewRound, 2500);
 }
 
 export function submitAnimalGuess(name) {
-    if (state.roundLocked) return; 
-    state.roundLocked = true;
-    state.aiLocked = true;
-    
-    resultDisplay.style.color = '#5ea1d6'; 
-    resultDisplay.textContent = 'Processando palpite...';
-    
+    if (state.roundLocked) return;
     checkGameGuess(name);
-    
-    resetAIState();
 }
