@@ -2,9 +2,9 @@ import {
     confirmButton, resultDisplay, logDisplay,
     confirmButtonGame, resultDisplayGame,
     testAreaWrapper, gameArea, gameWebcamSlot, state
-} from '../index.js';
-import { appendToLog } from './log-utility.js';
-import { resetAIState } from './ai-classifier.js';
+} from '../../index.js';
+import { appendToLog } from '../utils/log-utility.js';
+import { resetAIState } from '../ia/ai-classifier.js';
 import { startNewRound, mapNumberToAnimal, checkGameGuess } from './game-logic.js';
 
 export function handleConfirmation() {

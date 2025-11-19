@@ -1,8 +1,8 @@
-import { init } from './src/ai-classifier.js'; 
-import { startGame, handleConfirmation } from './src/game-handlers.js'; 
+import { init } from './src/ia/ai-classifier.js';
+import { startGame, handleConfirmation } from './src/game/game-handlers.js';
+import { loadComponent } from './src/utils/component-loader.js';
 
-
-export const URL = "./model/"; 
+export const URL = "./model/";
 
 export const state = {
     model: null,
@@ -51,11 +51,15 @@ export let resultDisplayGame;
 export let confirmButtonGame;
 export let gameLogDisplay;
 
-document.addEventListener("DOMContentLoaded", () => {
+async function setupDOMAndListeners() {
+    
+    await loadComponent('./components/game-area.html', 'game-area-slot');
+    await loadComponent('./components/guide-side.html', 'guide-slot');
+
     resultDisplay = document.getElementById('result-display');
     confirmButton = document.getElementById('confirm-button');
     logDisplay = document.getElementById('log-display'); 
-    testAreaWrapper = document.getElementById('main-content-wrapper');
+    testAreaWrapper = document.getElementById('test-area-wrapper');
     gameArea = document.getElementById('game-area');
     gameWebcamSlot = document.getElementById('game-webcam-slot');
     animalListContainer = document.getElementById('animal-list-container'); 
@@ -64,12 +68,20 @@ document.addEventListener("DOMContentLoaded", () => {
     confirmButtonGame = document.getElementById('confirm-button-game');
     gameLogDisplay = document.getElementById('game-log-display');
 
-
-    confirmButton.addEventListener('click', handleConfirmation);
+    if (confirmButton) {
+        confirmButton.addEventListener('click', handleConfirmation);
+    }
     
-    confirmButtonGame.addEventListener('click', handleConfirmation);
+    if (confirmButtonGame) {
+        confirmButtonGame.addEventListener('click', handleConfirmation);
+    }
     
-    document.getElementById('start-game').addEventListener('click', startGame);
+    const startGameButton = document.getElementById('start-game');
+    if (startGameButton) {
+        startGameButton.addEventListener('click', startGame);
+    }
 
     init();
-});
+}
+
+document.addEventListener("DOMContentLoaded", setupDOMAndListeners);
