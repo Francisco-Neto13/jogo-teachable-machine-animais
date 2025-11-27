@@ -4,6 +4,8 @@ import {
     state 
 } from '../../index.js';
 
+import { appendToLog } from './log-utility.js';
+
 export function renderAnimalImage(imageUrl) {
     if (!animalImageDisplay) {
         console.error("Elemento animalImageDisplay não encontrado.");

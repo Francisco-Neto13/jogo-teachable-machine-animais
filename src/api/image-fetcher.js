@@ -1,32 +1,26 @@
-const PROXY_ENDPOINT = '/api/image-proxy'; 
-const FALLBACK_IMAGE_URL = './assets/fallback-animal.jpg'; 
+import { translateAnimalToEnglish } from '../utils/translation-utility.js';
+
 export async function fetchAnimalImage(animalName) {
-    
-    const url = `${PROXY_ENDPOINT}?animal=${animalName}`;
+    const englishAnimalName = translateAnimalToEnglish(animalName);
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(`/api/pexels?animal=${englishAnimalName}`);
+
+        if (!response.ok) {
+            console.error("Erro chamando backend:", response.status);
+            return './assets/fallback-animal.jpg';
+        }
+
         const data = await response.json();
 
-        if (data.error) {
-            console.error(`Erro do Proxy para ${animalName}: ${data.error}`);
-            
-            if (data.error.includes("Nenhuma imagem encontrada")) {
-                 console.warn(`Nenhuma imagem encontrada para: ${animalName}`);
-            }
-
-            return FALLBACK_IMAGE_URL;
+        if (data.photos && data.photos.length > 0) {
+            return data.photos[0].src.medium;
         }
 
-        if (data.imageUrl) {
-            return data.imageUrl; 
-        }
-
-        console.warn(`Resposta inesperada do proxy para: ${animalName}`);
-        return FALLBACK_IMAGE_URL;
+        return './assets/fallback-animal.jpg';
 
     } catch (error) {
-        console.error("Erro ao conectar ou receber resposta do Serverless Proxy:", error);
-        return FALLBACK_IMAGE_URL;
+        console.error("Erro ao consultar backend:", error);
+        return './assets/fallback-animal.jpg';
     }
 }
