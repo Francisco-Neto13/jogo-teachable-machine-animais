@@ -5,33 +5,48 @@ import {
     state
 } from '../../index.js';
 
-import { renderAnimalList } from '../utils/dom-renderer.js';
+import { renderAnimalList, renderAnimalImage } from '../utils/dom-renderer.js';
+import { fetchAnimalImage } from '../api/image-fetcher.js';
 import { appendToLog } from '../utils/log-utility.js';
 import { resetAIState } from '../ia/ai-classifier.js';
 
-
-export function startNewRound() {
-    state.roundLocked = false;
+export async function startNewRound() {
+    state.roundLocked = true;
     state.aiLocked = false;
     confirmButton.disabled = true;
 
     state.currentRoundAnimals = getFiveUniqueAnimals(ALL_ANIMALS);
 
-    const { answer, animalsWithProb } =
-        defineAnswerWithProbabilities(state.currentRoundAnimals);
+    const answerIndex = Math.floor(Math.random() * state.currentRoundAnimals.length);
+    const correctAnimalName = state.currentRoundAnimals[answerIndex];
 
-    state.correctAnimal = answer;
+    resultDisplay.textContent = 'Carregando imagem...';
+    resultDisplay.style.color = '#ffc107';
 
+    const imageUrl = await fetchAnimalImage(correctAnimalName);
+
+    state.correctAnimal = { 
+        name: correctAnimalName, 
+        imageUrl: imageUrl 
+    };
+
+    renderAnimalImage(imageUrl);
+
+    const { animalsWithProb } =
+        defineAnswerWithProbabilities(state.currentRoundAnimals, correctAnimalName); 
+    
     renderAnimalList(animalsWithProb);
 
     state.currentAIChoice = null;
+    state.roundLocked = false;
+    confirmButton.disabled = false;
 
     resultDisplay.textContent = 'Nova Rodada!';
     resultDisplay.style.color = '#5ea1d6';
 
     appendToLog('', 'clear', true);
     appendToLog(
-        'Nova Rodada iniciada. Tente o sinal correspondente ao animal correto.',
+        `Nova Rodada: Qual destes é o animal da imagem? O gesto correto corresponde à posição dele na lista (1 a 5).`,
         'info',
         true
     );
@@ -42,8 +57,8 @@ export function getFiveUniqueAnimals(baseList) {
     return shuffled.slice(0, 5);
 }
 
-export function defineAnswerWithProbabilities(animals) {
-    const answerIndex = Math.floor(Math.random() * animals.length);
+export function defineAnswerWithProbabilities(animals, correctAnimalName) {
+    const answerIndex = animals.findIndex(name => name === correctAnimalName); 
     const answerName = animals[answerIndex];
 
     const raw = [];
@@ -59,7 +74,7 @@ export function defineAnswerWithProbabilities(animals) {
 
     const animalsWithProb = animals.map((name, idx) => ({
         name,
-        isCorrect: idx === answerIndex,
+        isCorrect: name === correctAnimalName,
         probability: percentages[idx]
     }));
 
@@ -78,11 +93,11 @@ export function checkGameGuess(guessedAnimalName) {
     let message = '';
     let type = '';
 
-    if (guessedAnimalName === state.correctAnimal.name) {
-        message = `ACERTOU! O animal correto era ${state.correctAnimal.name}.`;
+    if (guessedAnimalName === state.correctAnimal.name) { 
+        message = `ACERTOU! O animal da imagem era ${state.correctAnimal.name}. Seu gesto corresponde ao nome correto!`;
         type = 'success';
     } else {
-        message = `ERROU! Você escolheu **${guessedAnimalName}**, mas o correto era ${state.correctAnimal.name}.`;
+        message = `ERROU! Você apontou para ${guessedAnimalName}, mas o animal da imagem era ${state.correctAnimal.name}.`;
         type = 'error';
     }
 
