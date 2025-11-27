@@ -98,8 +98,9 @@ h1 {
 #game-content-flex {
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     flex-wrap: wrap;
-    gap: 50px;
+    gap: 2px;
     margin-bottom: 50px;
 }
 
@@ -141,7 +142,10 @@ h1 {
 
 #test-area-wrapper,
 #guide-slot {
-    width: 520px;
+    width: 100%;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #guide-slot {
