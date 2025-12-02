@@ -5,21 +5,27 @@
     <title>Jogo de Reconhecimento de Gestos com IA</title>
 
     <link rel="icon" type="image/png" href="imagens/geral/favicon.png">
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/webcam.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/guide.css">
 </head>
+
 <body>
 
     <h1>Reconhecimento de Gestos com IA</h1>
-    
-        <div id="instructions-box">
+
+    <div id="instructions-box">
         <div class="instructions-header">
-            <span class="icon">📢</span>
             <h3>Instruções Importantes</h3>
         </div>
+
         <ul>
             <li>Fique em um <strong>ambiente bem iluminado</strong> para melhor precisão da IA.</li>
             <li>Utilize a mão <strong>direita</strong> para realizar os sinais.</li>
@@ -30,8 +36,9 @@
     </div>
 
     <div id="main-content-wrapper">
-        
-                <div id="test-area-wrapper" class="content-box">
+
+        <div id="test-area-wrapper" class="content-box">
+
             <div id="webcam-container">
                 <span style="color:#666;">A webcam aparecerá aqui...</span>
             </div>
@@ -43,14 +50,12 @@
             <button id="confirm-button" disabled>Confirmar Palpite</button>
             <button id="start-game">Iniciar Jogo</button>
         </div>
-    
 
-        <div id="guide-slot" class="content-box" style="justify-content:space-between;">
-        Carregando Guia de Sinais...
+        <div id="guide-slot" class="content-box"></div>
+
     </div>
 
-    </div>     <div id="game-area-slot">
-        </div>
+    <div id="game-area-slot"></div>
 
     <script type="module" src="index.js"></script>
 </body>

@@ -1,0 +1,114 @@
+#result-display,
+#result-display-game {
+    font-size: 1.3em;
+    margin-top: 20px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 600;
+    color: var(--cor-secundaria);
+}
+
+#confirm-button,
+#confirm-button-game,
+#start-game {
+    margin-top: 12px;
+    padding: 12px 28px;
+
+    font-size: 1.07em;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.23s ease;
+}
+
+#confirm-button,
+#confirm-button-game {
+    background: var(--cor-secundaria);
+}
+
+#confirm-button:hover:not(:disabled),
+#confirm-button-game:hover:not(:disabled) {
+    background: #5798ff;
+    transform: scale(1.03);
+}
+
+#confirm-button:disabled,
+#confirm-button-game:disabled {
+    background: #3a3d41;
+    color: #999;
+    cursor: not-allowed;
+}
+
+#start-game {
+    background: var(--cor-principal);
+}
+
+/* LOGS  */
+
+#log-display,
+#game-log-display {
+    background: #0d0e10; 
+    border: 1px solid var(--borda);
+
+    border-radius: 8px;
+    padding: 10px; 
+    
+    margin: 0; 
+
+    max-height: 180px;
+    overflow-y: auto; 
+
+    font-size: 0.88em;
+    color: var(--texto-suave);
+
+    width: 100%;
+    box-sizing: border-box; 
+}
+
+#game-log-display h4 {
+    color: var(--cor-principal);
+    margin: 0 0 5px 0;
+}
+
+/* ANIMAL LIST  */
+
+#animal-list-container {
+    margin-top: 20px;
+    padding: 15px;
+
+    background: #0f1012;
+    border-radius: 10px;
+    border: 1px solid var(--borda);
+
+    text-align: left;
+}
+
+#animal-list-container h3 {
+    color: var(--cor-secundaria);
+    text-align: center;
+    margin-top: 0;
+}
+
+/* Estilos dos placeholders e H2 do game-area  */
+
+#game-area h2 {
+    color: var(--cor-principal);
+}
+
+#game-webcam-slot span {
+    color: #666; 
+}
+
+#animal-image-display p {
+    text-align: center; 
+    color: #999; 
+    font-style: italic; 
+    padding: 10px;
+}

@@ -1,0 +1,104 @@
+#instructions-box {
+    max-width: 820px;
+    margin: 0 auto 50px auto;
+    padding: 28px 32px;
+
+    background: linear-gradient(145deg, #191b20, #121417);
+    border: 1px solid rgba(66, 133, 244, 0.25);
+
+    border-radius: 14px;
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.5),
+        inset 0 0 12px rgba(66, 133, 244, 0.06);
+
+    text-align: left;
+
+    transition: transform 0.25s ease, box-shadow 0.35s ease;
+}
+
+#instructions-box:hover {
+    box-shadow:
+        0 6px 22px rgba(0, 0, 0, 0.55),
+        inset 0 0 14px rgba(66, 133, 244, 0.12);
+    transform: translateY(-3px);
+}
+
+.instructions-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.instructions-header .icon {
+    font-size: 1.6em;
+    color: var(--cor-secundaria);
+}
+
+#instructions-box h3 {
+    color: var(--cor-secundaria);
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.25em;
+    letter-spacing: 0.5px;
+}
+
+#instructions-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0 0;
+}
+
+#instructions-box li {
+    position: relative;
+    padding-left: 30px;
+    margin: 10px 0;
+    color: var(--texto-suave);
+    font-size: 1em;
+}
+
+#instructions-box li::before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--cor-principal);
+    font-weight: bold;
+}
+
+/* BOXES */
+
+.content-box,
+.game-controls-box,
+.game-info-box {
+    min-height: 620px;
+    width: 520px;
+
+    background: var(--fundo-claro);
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    padding: 25px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.content-box,
+.game-controls-box {
+    align-items: center;
+}
+
+.game-info-box {
+    justify-content: flex-start;
+    text-align: center;
+}
+
+.content-box:hover,
+.game-controls-box:hover,
+.game-info-box:hover {
+    box-shadow: 0 0 18px rgba(66, 133, 244, 0.25);
+    transform: translateY(-3px);
+}

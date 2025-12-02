@@ -19,7 +19,7 @@ export function handleConfirmation() {
     state.aiLocked = true;
 
     if (!state.currentAIChoice) {
-        appendToLog('⚠️ Não há palpite fixado.', 'error');
+        appendToLog('Não há palpite fixado.', 'error');
 
         setTimeout(() => {
             state.roundLocked = false;

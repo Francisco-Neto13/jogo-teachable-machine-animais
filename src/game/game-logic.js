@@ -46,7 +46,7 @@ export async function startNewRound() {
 
     appendToLog('', 'clear', true);
     appendToLog(
-        `Nova Rodada: Qual destes é o animal da imagem? O gesto correto corresponde à posição dele na lista (1 a 5).`,
+        `Nova Rodada: Qual destes é o animal da imagem?`,
         'info',
         true
     );

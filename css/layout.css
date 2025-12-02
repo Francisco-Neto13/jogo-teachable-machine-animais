@@ -1,0 +1,33 @@
+#main-content-wrapper,
+#game-content-flex {
+    display: flex;
+    justify-content: center;
+    align-items: stretch; 
+    flex-wrap: wrap;
+    gap: 22px;
+    margin-bottom: 50px;
+}
+
+#log-display-container {
+    width: 100%;
+}
+
+#game-log-container-full-width {
+    width: calc(1000px + 22px); 
+    max-width: 100%; 
+    margin: 30px auto 0 auto; 
+    
+    background: var(--fundo-claro); 
+    border: 1px solid var(--borda); 
+    border-radius: 12px;
+    padding: 25px; 
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); 
+
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+#game-log-container-full-width:hover {
+    box-shadow: 0 0 18px rgba(77, 180, 255, 0.25);
+    transform: translateY(-3px);
+}

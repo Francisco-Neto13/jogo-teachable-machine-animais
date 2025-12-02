@@ -1,0 +1,70 @@
+#gesture-guide-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+
+    margin-top: 15px;
+    background: #0f1012;
+
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.gesture-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 90px;
+    padding: 10px;
+
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+    border: 1px solid transparent;
+
+    transition: 0.2s ease;
+}
+
+.gesture-item:hover {
+    border-color: var(--cor-principal);
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateY(-3px);
+}
+
+.gesture-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid var(--borda);
+    margin: 6px 0;
+}
+
+.gesture-item .number {
+    color: var(--cor-principal);
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.gesture-item .name {
+    color: var(--texto-suave);
+    font-size: 0.9em;
+}
+
+/* LOG DISPLAY CONTAINER  */
+
+#log-display-container {
+    width: 100%;
+    margin-top: 30px; 
+    
+    display: flex;
+    flex-direction: column;
+}
+
+#log-display-container h3 {
+    color: var(--cor-principal);
+    margin-top: 0; 
+    margin-bottom: 10px;
+}
